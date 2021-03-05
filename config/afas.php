@@ -20,6 +20,6 @@ return [
                 'articles' => env('AFAS_ARTICLES_GETCONNECTOR')
             ]
         ]
-        
+
     ]
 ];
