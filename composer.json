@@ -1,0 +1,18 @@
+{
+    "name": "we-simply-code/laravel-afas-rest-connector",
+    "description": "This package integrates the AFAS REST API with Laravel",
+    "type": "library",
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "9.x-dev",
+        "guzzlehttp/guzzle": "^7.0.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sunil Kisoensingh",
+            "email": "sunil.kisoensingh@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
