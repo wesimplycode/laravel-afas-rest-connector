@@ -67,17 +67,39 @@ class AfasClient
 
     /**
      * @return string|null
-     * @throws \Exception
      */
     public function buildUrl(): ?string
     {
-        if (!$env = $this->connection->getEnvironment())
+        $default = ".afas.online/profitrestservices/";
+
+        $url = "https://".$this->connection->getEnvironmentNumbers().".rest";
+
+        if ($this->connection->getTypeOfEnvironment() == 'production')
         {
-            throw new \Exception("No Afas environment set for selected connection.");
+            $url .= $default;
+        } elseif ($this->connection->getTypeOfEnvironment() == 'test')
+        {
+            $url .= 'test'.$default;
+        } elseif ($this->connection->getTypeOfEnvironment() == 'accept')
+        {
+            $url .= 'accept'.$default;
+        } else {
+            return null;
         }
 
-        return null;
-        //todo: build url
+        $url = $this->addCorrectConnectorToUrl($url);
+
+        return $url;
+    }
+
+    private function addCorrectConnectorToUrl($url): string
+    {
+        $connectorType = explode('Afas', explode('\\', get_class($this->connector))[2])[1];
+
+        if ($connectorType == 'GetConnector' || $connectorType == 'UpdateConnector')
+        {
+            return $url.'connectors/'.$this->connector->getName();
+        }
     }
 
     /**

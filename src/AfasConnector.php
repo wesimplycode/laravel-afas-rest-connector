@@ -22,6 +22,14 @@ class AfasConnector
         $this->client = new AfasClient($connection, $this);
     }
 
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     public function execute()
     {
         if ($this instanceof AfasGetConnector)

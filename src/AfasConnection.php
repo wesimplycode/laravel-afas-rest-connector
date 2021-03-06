@@ -28,8 +28,6 @@ class AfasConnection
 
         $config = $this->config['getConnectors'][$name];
 
-        unset($this->config['getConnectors']);
-
         return new AfasGetConnector($this, $config);
     }
 
@@ -64,6 +62,42 @@ class AfasConnection
      */
     public function getEnvironment(): string
     {
-        return $this->config['environment'];
+        if (!$env = $this->config['environment'])
+        {
+            throw new \Exception("No Afas environment set for selected connection.");
+        }
+
+        return $env;
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function getTypeOfEnvironment(): string
+    {
+        switch (substr($this->getEnvironment(), 0, 1))
+        {
+            case "O":
+                $type = "production";
+                break;
+            case "T":
+                $type = "test";
+                break;
+            case "A":
+                $type = "accept";
+                break;
+            default:
+                throw new \Exception("Could not extract the type of the environment. Please check the environment of the selected connection.");
+        }
+
+        return $type;
+    }
+
+    public function getEnvironmentNumbers()
+    {
+        $env = $this->getEnvironment();
+
+        return filter_var($env, FILTER_SANITIZE_NUMBER_INT);
     }
 }

@@ -10,14 +10,14 @@ return [
             'url' => env('AFAS_URL'),
 
             // The environment of the profit service. Ex: T11111AA
-            'environment' => env('AFAS_ENVIRONMENT'),
+            'environment' => env('AFAS_ENVIRONMENT', null),
 
             // The authorization token to make requests to the profit service
             'token' => env('AFAS_TOKEN', null),
 
             // List of all the getConnectors for the profit service
             'getConnectors' => [
-                'articles' => env('AFAS_ARTICLES_GETCONNECTOR')
+                'contacts' => env('AFAS_CONTACTS_GETCONNECTOR')
             ],
 
             // List of all the updateConnectors for the profit service
