@@ -15,7 +15,7 @@ class AfasClient
     /**
      * @var string
      */
-    protected $url = "https://";
+    protected $url;
 
     /**
      * The selected connector for the connection
@@ -66,15 +66,17 @@ class AfasClient
     }
 
     /**
-     * @return string
+     * @return string|null
+     * @throws \Exception
      */
-    public function buildUrl(): string
+    public function buildUrl(): ?string
     {
         if (!$env = $this->connection->getEnvironment())
         {
             throw new \Exception("No Afas environment set for selected connection.");
         }
 
+        return null;
         //todo: build url
     }
 

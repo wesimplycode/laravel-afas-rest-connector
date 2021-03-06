@@ -21,4 +21,16 @@ class AfasConnector
 
         $this->client = new AfasClient($connection, $this);
     }
+
+    public function execute()
+    {
+        if ($this instanceof AfasGetConnector)
+        {
+            return $this->client->get();
+        } elseif ($this instanceof AfasUpdateConnector)
+        {
+            // ToDo: implement the put and delete methods
+            return $this->client->post();
+        }
+    }
 }
