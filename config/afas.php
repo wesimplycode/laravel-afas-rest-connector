@@ -12,6 +12,10 @@ return [
             // The authorization token to make requests to the profit service
             'token' => env('AFAS_TOKEN', null),
 
+            /**
+             * These are placeholders. Replace them with your connectors!
+             */
+
             // List of all the getConnectors for the profit service
             'getConnectors' => [
                 'contacts' => env('AFAS_CONTACTS_GETCONNECTOR')
