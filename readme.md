@@ -33,6 +33,7 @@ Afas::getConnector('contacts')->execute()->status();
 // This will return the response in JSON
 Afas::getConnector('contacts')->execute()->json();
 ```
+Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
 
 #### GetConnector
 With the GetConnector you can retrieve data from AFAS profitService.
