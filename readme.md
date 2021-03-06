@@ -72,3 +72,9 @@ Afas::getConnector('contacts')->skip(1)->execute();
 // Retrieve 10 contacts and skip the first
 Afas::getConnector('contacts')->skip(1)->take(10)->execute();
 ```
+
+## Credits
+Sunil Kisoensingh
+
+## License
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
