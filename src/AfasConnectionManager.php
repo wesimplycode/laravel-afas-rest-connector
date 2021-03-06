@@ -15,7 +15,11 @@ class AfasConnectionManager
         $this->config = $config;
     }
 
-    public function connection(string $name = 'default')
+    /**
+     * @param string $name
+     * @return AfasConnection
+     */
+    public function connection(string $name = 'default'): AfasConnection
     {
         if (!array_key_exists($name, $this->config['connections'])) {
             throw new \InvalidArgumentException("Connection $name is not configured.");
@@ -24,6 +28,16 @@ class AfasConnectionManager
         $config = $this->config['connections'][$name];
 
         return new AfasConnection($config);
+    }
+
+    /**
+     * @param string $name
+     * @param string $connection
+     * @return AfasGetConnector
+     */
+    public function getConnector(string $name, string $connection = 'default'): AfasGetConnector
+    {
+        return $this->connection($connection)->getConnector($name);
     }
 
 }
