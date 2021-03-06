@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Http;
 class AfasClient
 {
     /**
+     * @var string
+     */
+    protected $url;
+
+    /**
      * The connection to AFAS
      * @var AfasConnection
      */
     protected $connection;
-
-    /**
-     * @var string
-     */
-    protected $url;
 
     /**
      * The selected connector for the connection
@@ -98,8 +98,17 @@ class AfasClient
 
         if ($connectorType == 'GetConnector' || $connectorType == 'UpdateConnector')
         {
-            return $url.'connectors/'.$this->connector->getName();
+            $url .= 'connectors/'.$this->connector->getName();
         }
+
+        // ToDo: add fileconnector, imageconnector etc with elseifs
+
+        if ($connectorType == 'GetConnector')
+        {
+            $url = $this->connector->addFiltersToUrl($url);
+        }
+
+        return $url;
     }
 
     /**
@@ -117,6 +126,6 @@ class AfasClient
 
         return Http::withHeaders([
             'Authorization' => "AfasToken ".base64_encode($this->connection->getToken())
-        ])->$method($this->url, $data);
+        ])->$method($this->url, $data == [] ? null : $data);
     }
 }

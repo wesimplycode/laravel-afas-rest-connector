@@ -11,7 +11,6 @@ class AfasConnector
     protected $name;
 
     /**
-     * The connection to AFAS
      * @var AfasConnection
      */
     protected $connection;
@@ -33,13 +32,15 @@ class AfasConnector
 
     public function execute()
     {
+        $client = new AfasClient($this->connection, $this);
+
         if ($this instanceof AfasGetConnector)
         {
-            return $this->client->get();
+            return $client->get();
         } elseif ($this instanceof AfasUpdateConnector)
         {
             // ToDo: implement the put and delete methods
-            return $this->client->post();
+            return $client->post();
         }
     }
 }
