@@ -1,3 +1,5 @@
+# This package is still under development. Use at own risk!
+
 ## What this package does
 This package integrates the AFAS REST API with Laravel with minimal setup.
 
@@ -44,7 +46,7 @@ After configuring your getConnectors for your connection you can use the like th
 Afas::getConnector('contacts');
 
 // This will give you the "contacts" getConnector for a different connection
-Afas::getConnector('contacts', 'differentConnection');
+Afas::getConnector('contacts', 'differentConnectionName');
 ```
 ##### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
