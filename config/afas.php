@@ -13,7 +13,7 @@ return [
             'environment' => env('AFAS_ENVIRONMENT'),
 
             // The authorization token to make requests to the profit service
-            'token' => env('AFAS_TOKEN'),
+            'token' => env('AFAS_TOKEN', null),
 
             // List of all the getConnectors for the profit service
             'getConnectors' => [
