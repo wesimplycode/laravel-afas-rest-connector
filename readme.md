@@ -42,6 +42,9 @@ After configuring your getConnectors for your connection you can use the like th
 ```php
 // This will give you the "contacts" getConnector for the default connection
 Afas::getConnector('contacts');
+
+// This will give you the "contacts" getConnector for a different connection
+Afas::getConnector('contacts', 'differentConnection');
 ```
 ##### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
