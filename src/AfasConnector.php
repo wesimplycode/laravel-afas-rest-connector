@@ -19,6 +19,6 @@ class AfasConnector
     {
         $this->name = $name;
 
-        $this->client = new AfasClient($connection);
+        $this->client = new AfasClient($connection, $this);
     }
 }
