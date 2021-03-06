@@ -2,16 +2,11 @@
 
 namespace WeSimplyCode\LaravelAfasRestConnector;
 
-class AfasGetConnector
+class AfasGetConnector extends AfasConnector
 {
-    /**
-     * The name of the getConnector being used
-     * @var string
-     */
-    protected $name;
-
     public function __construct(AfasConnection $connection, string $name)
     {
-        $this->name = $name;
+        dd($connection->getEnvironment());
+        parent::__construct($connection, $name);
     }
 }

@@ -28,6 +28,24 @@ class AfasConnection
 
         $config = $this->config['getConnectors'][$name];
 
+        unset($this->config['getConnectors']);
+
         return new AfasGetConnector($this, $config);
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->config['token'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnvironment(): string
+    {
+        return $this->config['environment'];
     }
 }
