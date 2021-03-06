@@ -77,4 +77,4 @@ Afas::getConnector('contacts')->skip(1)->take(10)->execute();
 Sunil Kisoensingh
 
 ## License
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
