@@ -40,4 +40,14 @@ class AfasConnectionManager
         return $this->connection($connection)->getConnector($name);
     }
 
+    /**
+     * @param string $name
+     * @param string $connection
+     * @return AfasUpdateConnector
+     */
+    public function updateConnector(string $name, string $connection = 'default'): AfasUpdateConnector
+    {
+        return $this->connection($connection)->updateConnector($name);
+    }
+
 }

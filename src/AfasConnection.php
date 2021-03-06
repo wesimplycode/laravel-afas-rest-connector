@@ -34,6 +34,24 @@ class AfasConnection
     }
 
     /**
+     * Get a updateConnector for the selected connection
+     * @param string $name
+     * @return AfasUpdateConnector
+     */
+    public function updateConnector(string $name): AfasUpdateConnector
+    {
+        if (!array_key_exists($name, $this->config['updateConnectors'])) {
+            throw new \InvalidArgumentException("UpdateConnector $name is not configured for this connection.");
+        }
+
+        $config = $this->config['updateConnectors'][$name];
+
+        unset($this->config['updateConnectors']);
+
+        return new AfasUpdateConnector($this, $config);
+    }
+
+    /**
      * @return string
      */
     public function getToken(): string

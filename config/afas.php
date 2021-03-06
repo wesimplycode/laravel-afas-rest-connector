@@ -18,6 +18,11 @@ return [
             // List of all the getConnectors for the profit service
             'getConnectors' => [
                 'articles' => env('AFAS_ARTICLES_GETCONNECTOR')
+            ],
+
+            // List of all the updateConnectors for the profit service
+            'updateConnectors' => [
+                'persons' => env('AFAS_PERSONS_UPDATECONNECTOR')
             ]
         ]
 
