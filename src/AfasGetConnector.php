@@ -10,6 +10,14 @@ class AfasGetConnector extends AfasConnector
      */
     protected $take;
 
+    /**
+     * The amount of results that should be skipped in the response
+     * @var int
+     */
+    protected $skip;
+
+    protected $where = array();
+
     public function __construct(AfasConnection $connection, string $name)
     {
         parent::__construct($connection, $name);
@@ -19,9 +27,20 @@ class AfasGetConnector extends AfasConnector
      * @param int $amount
      * @return $this
      */
-    public function take(int $amount)
+    public function take(int $amount): AfasGetConnector
     {
         $this->take = (string) $amount;
+
+        return $this;
+    }
+
+    /**
+     * @param int $amount
+     * @return $this
+     */
+    public function skip(int $amount): AfasGetConnector
+    {
+        $this->skip = (string) $amount;
 
         return $this;
     }
@@ -32,13 +51,49 @@ class AfasGetConnector extends AfasConnector
      */
     public function addFiltersToUrl($url): string
     {
-        $url .= '?';
+        $filters = $this->getFilters();
+        $filters = $this->removeEmptyFilters($filters);
 
-        if ($this->take)
+        if (count($filters) > 1)
         {
-            $url .= 'take='.$this->take;
+            $i = 0;
+
+            $url .= '?';
+
+            foreach ($filters as $filter => $value)
+            {
+                $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
+                $i++;
+            }
         }
 
         return $url;
+    }
+
+    /**
+     * @param array $filters
+     * @return array
+     */
+    private function removeEmptyFilters(array $filters): array
+    {
+        foreach ($filters as $filter => $value)
+        {
+            if ($value == null || $value == '')
+            {
+                unset($filters[$filter]);
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
+     * @return array
+     */
+    private function getFilters(): array
+    {
+        return array_filter(get_object_vars($this), function ($key){
+            return !in_array($key, ['name', 'connection']);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
