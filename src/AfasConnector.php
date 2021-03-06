@@ -5,21 +5,22 @@ namespace WeSimplyCode\LaravelAfasRestConnector;
 class AfasConnector
 {
     /**
-     * The name of the getConnector being used
+     * The name of the connector being used
      * @var string
      */
     protected $name;
 
     /**
-     * @var AfasClient
+     * The connection to AFAS
+     * @var AfasConnection
      */
-    protected $client;
+    protected $connection;
 
     public function __construct(AfasConnection $connection, string $name)
     {
         $this->name = $name;
 
-        $this->client = new AfasClient($connection, $this);
+        $this->connection = $connection;
     }
 
     /**

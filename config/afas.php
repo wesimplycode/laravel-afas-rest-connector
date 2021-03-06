@@ -6,9 +6,6 @@ return [
     'connections' => [
 
         'default' => [
-            // The location URL of the profit service
-            'url' => env('AFAS_URL'),
-
             // The environment of the profit service. Ex: T11111AA
             'environment' => env('AFAS_ENVIRONMENT', null),
 
