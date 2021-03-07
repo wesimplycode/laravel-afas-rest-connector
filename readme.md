@@ -3,6 +3,10 @@
 ## What this package does
 This package integrates the AFAS REST API with Laravel with minimal setup.
 
+## Table of Contents  
+[Installation](#installation)<br>
+[Usage](#usage)
+
 ## Installation
 ```
 composer require we-simply-code/laravel-afas-rest-connector
