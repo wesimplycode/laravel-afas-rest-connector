@@ -13,6 +13,8 @@ This package integrates the AFAS REST API with Laravel with minimal setup.
          * [Skip](#skip)
       * [Execute](#execute)
       * [Multiple connectors](#multiple-connectors-on-the-same-connection)
+   * [Credits](#credits)
+   * [License](#license)
 <!--te-->
 
 ## Installation
