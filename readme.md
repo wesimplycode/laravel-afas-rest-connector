@@ -78,6 +78,22 @@ Afas::getConnector('contacts')->skip(1)->execute();
 Afas::getConnector('contacts')->skip(1)->take(10)->execute();
 ```
 
+#### Multiple connectors on the same connection
+When you want to retrieve data from multiple connectors on the same connection you can retrieve an instance of a connection and make calls with different connectors on the same connection.
+```php
+// Retrieve an instance of the default connection
+$connection = Afas::connection();
+
+// Retrieve an instance of a different connection
+$connection = Afas::connection('differentConnectionName');
+
+/*
+* Use different getConnectors to retrieve data on the same connection
+*/
+$contacts = $connection->getConnector('contacts')->take(1)->execute()->json();
+$articles = $connection->getConnector('articles')->take(1)->skip(1)->execute()->json();
+```
+
 ## Credits
 Sunil Kisoensingh
 
