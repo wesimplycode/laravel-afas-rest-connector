@@ -74,13 +74,12 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
 
     /**
      * @param string $field
-     * @param string $direction
-     * Default sort direction is ascending
+     * @param bool $desc
      * @return AfasGetConnector
      */
-    public function sortOnField(string $field, string $direction = null): AfasGetConnector
+    public function sortOnField(string $field, bool $desc = false): AfasGetConnector
     {
-        if ($direction == 'DESC' || $direction == 'desc')
+        if ($desc)
         {
             array_push($this->orderByFieldIds, '-'.$field);
         } else {

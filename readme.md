@@ -9,6 +9,7 @@ This package integrates the AFAS REST API with Laravel with minimal setup.
       * [Filters](#filters)
          * [Take](#take)
          * [Skip](#skip)
+         * [SortOnField](#sortonfield)
       * [Execute](#execute)
       * [Multiple connectors](#multiple-connectors-on-the-same-connection)
    * [Credits](#credits)
@@ -37,18 +38,6 @@ If not please take a look at the documentation for the AFAS REST API: https://he
 This package ships with a facade to access the different connectors easily.
 After retrieving your connector you can apply filters to it or add data to it and then call the ```execute()``` method to make the call to AFAS profitServices.
 
-This package uses Laravel's wrapper around Guzzle to make http calls.
-That means that after we call the ```execute()``` method, we can use the methods Laravel provides to inspect the response.
-Example:
-```php
-// This will return the request status
-Afas::getConnector('contacts')->execute()->status();
-
-// This will return the response in JSON
-Afas::getConnector('contacts')->execute()->json();
-```
-Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
-
 #### GetConnector
 With the GetConnector you can retrieve data from AFAS profitService.
 After configuring your getConnectors for your connection you can use the like this:
@@ -63,6 +52,7 @@ Afas::getConnector('contacts', 'differentConnectionName');
 
 #### Filters
 You can apply filters on getConnectors to retrieve more specific data.
+There is no specific order to apply filters. You can chain as many filters as you want except for the ```take()``` and ```skip()``` filter. Those can only be use once per request.
 
 ###### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
@@ -78,8 +68,18 @@ You can skip results by adding the ```skip()``` filter.
 Afas::getConnector('contacts')->skip(10);
 ```
 
+###### SortOnField
+Sort the results on any field. By default, the results will be ascending but with and extra parameter you can change that.
+```php
+// This will sort the results ascending by the field 'Name'
+Afas::getConnector('contacts')->sortOnField('Name');
+
+// This will sort the results descending by the field 'Name'
+Afas::getConnector('contacts')->sortOnField('Name', true);
+```
+
 #### Execute
-After we have added all the filters we can call the ```execute()``` method to make the call to the AFAS profitServices.
+The ```execute()``` method is used when you have configured the connector accordingly to make the call to the AFAS profitServices.
 ```php
 // Execute the call. This will retrieve 100 contacts from the AFAS profitServices
 Afas::getConnector('contacts')->execute();
@@ -93,6 +93,18 @@ Afas::getConnector('contacts')->skip(1)->execute();
 // Retrieve 10 contacts and skip the first
 Afas::getConnector('contacts')->skip(1)->take(10)->execute();
 ```
+
+This package uses Laravel's wrapper around Guzzle to make http calls.
+That means that after we call the ```execute()``` method, we can use the methods Laravel provides to inspect the response.
+Example:
+```php
+// This will return the request status
+Afas::getConnector('contacts')->execute()->status();
+
+// This will return the response in JSON
+Afas::getConnector('contacts')->execute()->json();
+```
+Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
 
 #### Multiple connectors on the same connection
 When you want to retrieve data from multiple connectors on the same connection you can retrieve an instance of a connection and make calls with different connectors on the same connection.
