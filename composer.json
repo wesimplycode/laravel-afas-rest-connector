@@ -14,7 +14,7 @@
             "email": "sunil.kisoensingh@gmail.com"
         }
     ],
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
             "WeSimplyCode\\LaravelAfasRestConnector\\": "packages/we-simply-code/laravel-afas-rest-connector/src/"
         }
