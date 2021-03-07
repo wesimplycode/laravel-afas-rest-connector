@@ -30,17 +30,39 @@ class AfasConnector
         return $this->name;
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function execute()
     {
         $client = new AfasClient($this->connection, $this);
 
-        if ($this instanceof AfasGetConnector)
+        return $client->makeRequest(strtolower($this->getMethod()));
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function buildUrl(): ?string
+    {
+        $default = ".afas.online/profitrestservices/";
+
+        $url = "https://".$this->connection->getEnvironmentNumbers().".rest";
+
+        if ($this->connection->getTypeOfEnvironment() == 'production')
         {
-            return $client->get();
-        } elseif ($this instanceof AfasUpdateConnector)
+            $url .= $default;
+        } elseif ($this->connection->getTypeOfEnvironment() == 'test')
         {
-            // ToDo: implement the put and delete methods
-            return $client->post();
+            $url .= 'test'.$default;
+        } elseif ($this->connection->getTypeOfEnvironment() == 'accept')
+        {
+            $url .= 'accept'.$default;
+        } else {
+            return null;
         }
+
+        return $url;
     }
 }

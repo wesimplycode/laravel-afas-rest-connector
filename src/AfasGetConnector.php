@@ -2,7 +2,9 @@
 
 namespace WeSimplyCode\LaravelAfasRestConnector;
 
-class AfasGetConnector extends AfasConnector
+use WeSimplyCode\LaravelAfasRestConnector\Interfaces\AfasConnectorInterface;
+
+class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
 {
     /**
      * The amount of results that should be in the response
@@ -24,6 +26,28 @@ class AfasGetConnector extends AfasConnector
     public function __construct(AfasConnection $connection, string $name)
     {
         parent::__construct($connection, $name);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        $url = $this->buildUrl();
+
+        $url .= 'connectors/'.$this->name;
+
+        $url = $this->addFiltersToUrl($url);
+
+        return $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return 'GET';
     }
 
     /**
