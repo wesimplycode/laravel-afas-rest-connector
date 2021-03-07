@@ -19,6 +19,16 @@
             "WeSimplyCode\\LaravelAfasRestConnector\\": "packages/we-simply-code/laravel-afas-rest-connector/src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WeSimplyCode\\LaravelAfasRestConnector\\LaravelAfasRestConnectorServiceProvider"
+            ],
+            "aliases": {
+                "Afas": "WeSimplyCode\\LaravelAfasRestConnector\\Facades\\Afas"
+            }
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
