@@ -4,8 +4,16 @@
 This package integrates the AFAS REST API with Laravel with minimal setup.
 
 ## Table of Contents  
-[Installation](#installation)<br>
-[Usage](#usage)
+<!--ts-->
+   * [Installation](#installation)
+   * [Usage](#usage)
+      * [GetConnector](#getconnector)
+      * [Filters](#filters)
+         * [Take](#take)
+         * [Skip](#skip)
+      * [Execute](#execute)
+      * [Multiple connectors](#multiple-connectors-on-the-same-connection)
+<!--te-->
 
 ## Installation
 ```
@@ -52,6 +60,10 @@ Afas::getConnector('contacts');
 // This will give you the "contacts" getConnector for a different connection
 Afas::getConnector('contacts', 'differentConnectionName');
 ```
+
+#### Filters
+You can apply filters on getConnectors to retrieve more specific data.
+
 ##### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
 ```php
@@ -66,7 +78,7 @@ You can skip results by adding the ```skip()``` filter.
 Afas::getConnector('contacts')->skip(10);
 ```
 
-##### Execute
+#### Execute
 After we have added all the filters we can call the ```execute()``` method to make the call to the AFAS profitServices.
 ```php
 // Execute the call. This will retrieve 100 contacts from the AFAS profitServices
