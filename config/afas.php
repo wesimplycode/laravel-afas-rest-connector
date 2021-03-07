@@ -12,8 +12,11 @@ return [
             // The authorization token to make requests to the profit service
             'token' => env('AFAS_TOKEN', null),
 
-            /**
+            /*
              * These are placeholders. Replace them with your connectors!
+             *
+             * You can name the key whatever you want. The value has to be the connector ID in AFAS Profit.
+             * You can add as many connectors as needed, just don't forget to add them to your .env file
              */
 
             // List of all the getConnectors for the profit service
