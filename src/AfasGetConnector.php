@@ -67,23 +67,6 @@ class AfasGetConnector extends AfasConnector
     }
 
     /**
-     * @param string $direction
-     * Default direction is ascending
-     * @return AfasGetConnector
-     */
-    public function sortDirection(string $direction): AfasGetConnector
-    {
-        if ($direction == 'DESC' || $direction == 'desc')
-        {
-            $this->sortDirection = '-';
-        } else {
-            $this->sortDirection = '+';
-        }
-
-        return $this;
-    }
-
-    /**
      * @param $url
      * @return string
      */
