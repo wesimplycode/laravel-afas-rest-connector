@@ -28,8 +28,6 @@ class AfasConnection
 
         $config = $this->config['getConnectors'][$name];
 
-        $this->removeOtherConnectorsFromConfig();
-
         return new AfasGetConnector($this, $config);
     }
 
@@ -46,19 +44,7 @@ class AfasConnection
 
         $config = $this->config['updateConnectors'][$name];
 
-        $this->removeOtherConnectorsFromConfig();
-
         return new AfasUpdateConnector($this, $config);
-    }
-
-    /**
-     * Remove the other connectors from the config since they are not needed anymore
-     */
-    private function removeOtherConnectorsFromConfig()
-    {
-        $this->config = array_filter($this->config, function ($key){
-            return in_array($key, ['environment', 'token']);
-        }, ARRAY_FILTER_USE_KEY);
     }
 
     /**

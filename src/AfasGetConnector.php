@@ -54,17 +54,14 @@ class AfasGetConnector extends AfasConnector
         $filters = $this->getFilters();
         $filters = $this->removeEmptyFilters($filters);
 
-        if (count($filters) > 1)
+        $i = 0;
+
+        $url .= '?';
+
+        foreach ($filters as $filter => $value)
         {
-            $i = 0;
-
-            $url .= '?';
-
-            foreach ($filters as $filter => $value)
-            {
-                $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
-                $i++;
-            }
+            $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
+            $i++;
         }
 
         return $url;
