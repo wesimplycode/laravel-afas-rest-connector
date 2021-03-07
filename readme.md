@@ -64,14 +64,14 @@ Afas::getConnector('contacts', 'differentConnectionName');
 #### Filters
 You can apply filters on getConnectors to retrieve more specific data.
 
-##### Take
+###### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
 ```php
 // This will add the take filter to the connector with an amount of 10
 Afas::getConnector('contacts')->take(10);
 ```
 
-##### Skip
+###### Skip
 You can skip results by adding the ```skip()``` filter.
 ```php
 // This will add the skip filter to the connector with an amount of 10
