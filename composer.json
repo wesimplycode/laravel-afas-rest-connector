@@ -14,5 +14,11 @@
             "email": "sunil.kisoensingh@gmail.com"
         }
     ],
-    "minimum-stability": "dev"
+    "autoload-dev": {
+        "psr-4": {
+            "WeSimplyCode\\LaravelAfasRestConnector\\": "packages/we-simply-code/laravel-afas-rest-connector/src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
