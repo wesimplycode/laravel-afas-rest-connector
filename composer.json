@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "WeSimplyCode\\LaravelAfasRestConnector\\": "packages/we-simply-code/laravel-afas-rest-connector/src/"
+            "WeSimplyCode\\LaravelAfasRestConnector\\": "src/"
         }
     },
     "extra": {
