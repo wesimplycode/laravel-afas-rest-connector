@@ -1,5 +1,3 @@
-# This package is still under development. Use at own risk!
-
 ## What this package does
 This package integrates the AFAS REST API with Laravel with minimal setup.
 
