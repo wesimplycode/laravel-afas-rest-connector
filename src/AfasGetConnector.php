@@ -16,7 +16,10 @@ class AfasGetConnector extends AfasConnector
      */
     protected $skip;
 
-    protected $where = array();
+    /**
+     * @var array
+     */
+    protected $orderByFieldIds = array();
 
     public function __construct(AfasConnection $connection, string $name)
     {
@@ -46,6 +49,41 @@ class AfasGetConnector extends AfasConnector
     }
 
     /**
+     * @param string $field
+     * @param string $direction
+     * Default sort direction is ascending
+     * @return AfasGetConnector
+     */
+    public function sortOnField(string $field, string $direction = null): AfasGetConnector
+    {
+        if ($direction == 'DESC' || $direction == 'desc')
+        {
+            array_push($this->orderByFieldIds, '-'.$field);
+        } else {
+            array_push($this->orderByFieldIds, $field);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $direction
+     * Default direction is ascending
+     * @return AfasGetConnector
+     */
+    public function sortDirection(string $direction): AfasGetConnector
+    {
+        if ($direction == 'DESC' || $direction == 'desc')
+        {
+            $this->sortDirection = '-';
+        } else {
+            $this->sortDirection = '+';
+        }
+
+        return $this;
+    }
+
+    /**
      * @param $url
      * @return string
      */
@@ -54,14 +92,40 @@ class AfasGetConnector extends AfasConnector
         $filters = $this->getFilters();
         $filters = $this->removeEmptyFilters($filters);
 
-        $i = 0;
-
-        $url .= '?';
-
-        foreach ($filters as $filter => $value)
+        if (count($filters) > 0)
         {
-            $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
-            $i++;
+            $i = 0;
+
+            $url .= '?';
+
+            foreach ($filters as $filter => $value)
+            {
+                switch ($filter)
+                {
+                    case 'skip':
+                    case 'take':
+                    $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
+                        break;
+                    case 'orderByFieldIds':
+                        $url .= $i > 0 ? '&'.$filter.'=' : $filter.'=';
+                        $amountFields = count($value);
+                        $i = 1;
+
+                        foreach ($value as $field)
+                        {
+                            if (count($value) > 1 && $i < $amountFields)
+                            {
+                                $url .= $field.urlencode(',');
+                            } elseif ($i == $amountFields) {
+                                $url .= $field;
+                            }
+
+                            $i++;
+                        }
+                }
+
+                $i++;
+            }
         }
 
         return $url;
