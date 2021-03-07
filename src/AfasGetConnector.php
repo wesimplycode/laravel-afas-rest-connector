@@ -94,7 +94,7 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      * @param $url
      * @return string
      */
-    public function addFiltersToUrl($url): string
+    protected function addFiltersToUrl($url): string
     {
         $filters = $this->getFilters();
         $filters = $this->removeEmptyFilters($filters);
