@@ -1,6 +1,8 @@
 ## What this package does
 This package integrates the AFAS REST API with Laravel with minimal setup.
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/we-simply-code/laravel-afas-rest-connector)](https://packagist.org/packages/we-simply-code/laravel-afas-rest-connector)
+
 ## Table of Contents  
 <!--ts-->
    * [Installation](#installation)
