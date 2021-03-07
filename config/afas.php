@@ -30,5 +30,27 @@ return [
             ]
         ]
 
+    ],
+
+    /*
+     * Do not change this array!
+     * Check out the documentation to see which filters are available
+     */
+    'filterOperators' => [
+        '1' => '=',
+        '2' => '>=',
+        '3' => '<=',
+        '4' => '>',
+        '5' => '>',
+        '6' => '*',
+        '7' => '!=',
+        '8' => '[]',
+        '9' => '![]',
+        '10' => '@',
+        '11' => '!*',
+        '12' => '!@',
+        '13' => '&',
+        '14' => '!&',
+        '15' => 'Sf',
     ]
 ];
