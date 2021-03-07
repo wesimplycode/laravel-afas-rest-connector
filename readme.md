@@ -8,10 +8,10 @@ This package integrates the AFAS REST API with Laravel with minimal setup.
    * [Installation](#installation)
    * [Usage](#usage)
       * [GetConnector](#getconnector)
-      * [Filters](#filters)
-         * [Take](#take)
-         * [Skip](#skip)
-         * [SortOnField](#sortonfield)
+         * [Filters](#filters)
+            * [Take](#take)
+            * [Skip](#skip)
+            * [SortOnField](#sortonfield)
       * [Execute](#execute)
       * [Multiple connectors](#multiple-connectors-on-the-same-connection)
    * [Credits](#credits)
@@ -72,6 +72,7 @@ Afas::getConnector('contacts')->skip(10);
 
 ###### SortOnField
 Sort the results on any field. By default, the results will be ascending but with and extra parameter you can change that.
+Field names must be exact the same as they are in AFAS profitServices.
 ```php
 // This will sort the results ascending by the field 'Name'
 Afas::getConnector('contacts')->sortOnField('Name');
