@@ -21,12 +21,12 @@ return [
 
             // List of all the getConnectors for the profit service
             'getConnectors' => [
-                'contacts' => env('AFAS_CONTACTS_GETCONNECTOR')
+                'contacts' => ''
             ],
 
             // List of all the updateConnectors for the profit service
             'updateConnectors' => [
-                'persons' => env('AFAS_PERSONS_UPDATECONNECTOR')
+                'persons' => ''
             ]
         ]
 
