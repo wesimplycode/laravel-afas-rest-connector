@@ -55,7 +55,7 @@ Afas::getConnector('contacts', 'differentConnectionName');
 
 #### Filters
 You can apply filters on getConnectors to retrieve more specific data.
-There is no specific order to apply filters. You can chain as many filters as you want except for the ```take()``` and ```skip()``` filter. Those can only be use once per request.
+There is no specific order to apply filters. You can chain as many filters as you want except for the ```take()``` and ```skip()``` filter. Those can only be used once per request.
 
 ###### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
