@@ -4,8 +4,7 @@
     "type": "library",
     "require": {
         "php": "^7.3|^8.0",
-        "illuminate/support": "^8",
-        "guzzlehttp/guzzle": "^7.0.1"
+        "illuminate/support": "^8"
     },
     "license": "MIT",
     "authors": [
