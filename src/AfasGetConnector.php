@@ -36,6 +36,7 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function getUrl(): string
     {

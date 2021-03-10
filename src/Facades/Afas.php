@@ -3,15 +3,19 @@
 namespace WeSimplyCode\LaravelAfasRestConnector\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use WeSimplyCode\LaravelAfasRestConnector\AfasConnectionManager;
 
 /**
- * @method AfasConnectionManager connection(string $name = 'default')
- * @method AfasConnectionManager getConnector(string $name, string $connection = 'default')
+ * @method static \WeSimplyCode\LaravelAfasRestConnector\AfasConnection connection(string $name = 'default')
+ * @method static \WeSimplyCode\LaravelAfasRestConnector\AfasGetConnector getConnector(string $name, string $connection = 'default')
+ *
+ * @see \WeSimplyCode\LaravelAfasRestConnector\AfasConnectionManager
  */
 class Afas extends Facade
 {
-    protected static function getFacadeAccessor()
+    /**
+     * @return string
+     */
+    protected static function getFacadeAccessor(): string
     {
         return 'Afas';
     }
