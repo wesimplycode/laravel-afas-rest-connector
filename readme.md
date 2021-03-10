@@ -12,6 +12,7 @@ This package integrates the AFAS REST API with Laravel with minimal setup.
             * [Take](#take)
             * [Skip](#skip)
             * [SortOnField](#sortonfield)
+            * [Where](#where)
       * [Execute](#execute)
       * [Generating URL](#generating-url)
       * [Multiple connectors](#multiple-connectors-on-the-same-connection)
@@ -78,9 +79,27 @@ Field names must be exact the same as they are in AFAS profitServices.
 // This will sort the results ascending by the field 'Name'
 Afas::getConnector('contacts')->sortOnField('Name');
 
+// Add true as second parameter to sort the results descending
 // This will sort the results descending by the field 'Name'
 Afas::getConnector('contacts')->sortOnField('Name', true);
 ```
+
+###### Where
+If you want to get specific results from the getConnector you can use the ```where()``` filter. It is recommended to always use the ```where()```
+filter with the getConnector as it enhances the performance and only gives you the results you need.
+All AFAS Profit filters for the ```where()``` filter are available. The filters are listed in the config file. You can use them in their symbol form, or their text form.
+```php
+// The where() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
+// Get only the contacts of type Person
+Afas::getConnector('contacts')->where('type', '=', 'Person');
+
+// You can chain as much where filters as needed
+// Get only the contacts from the Netherlands & Belgium
+Afas::getConnector('contacts')->where('country', '=', 'Netherlands')->where('country', '=', 'Belgium');
+```
+
+###### orWhere
+Will be added soon!
 
 #### Execute
 The ```execute()``` method is used when you have configured the connector accordingly to make the call to the AFAS profitServices.
