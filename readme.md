@@ -95,7 +95,9 @@ Afas::getConnector('contacts')->where('type', '=', 'Person');
 
 // You can chain as much where filters as needed
 // Get only the contacts from the Netherlands & Belgium
-Afas::getConnector('contacts')->where('country', '=', 'Netherlands')->where('country', '=', 'Belgium');
+Afas::getConnector('contacts')
+    ->where('country', '=', 'Netherlands')
+    ->where('country', '=', 'Belgium');
 ```
 
 ###### orWhere
@@ -108,13 +110,20 @@ The ```execute()``` method is used when you have configured the connector accord
 Afas::getConnector('contacts')->execute();
 
 // Retrieve 10 contacts
-Afas::getConnector('contacts')->take(10)->execute();
+Afas::getConnector('contacts')
+    ->take(10)
+    ->execute();
 
 // Retrieve 100 contacts but skip the first
-Afas::getConnector('contacts')->skip(1)->execute();
+Afas::getConnector('contacts')
+    ->skip(1)
+    ->execute();
 
 // Retrieve 10 contacts and skip the first
-Afas::getConnector('contacts')->skip(1)->take(10)->execute();
+Afas::getConnector('contacts')
+    ->skip(1)
+    ->take(10)
+    ->execute();
 ```
 
 #### Generating URL
@@ -125,7 +134,10 @@ method instead of the ```execute()``` method after configuring the connector.
 // Both of these will return the generated URL by the connector (you can use this directly to make a call in something like Postman)
 Afas::getConnector('contacts')->getUrl();
 
-Afas::getConnector('contacts')->take(10)->where('Type', '=', 'Person')->getUrl();
+Afas::getConnector('contacts')
+    ->take(10)
+    ->where('Type', '=', 'Person')
+    ->getUrl();
 ```
 
 This package uses Laravel's wrapper around Guzzle to make http calls.
@@ -133,10 +145,14 @@ That means that after we call the ```execute()``` method, we can use the methods
 Example:
 ```php
 // This will return the request status
-Afas::getConnector('contacts')->execute()->status();
+Afas::getConnector('contacts')
+    ->execute()
+    ->status();
 
 // This will return the response in JSON
-Afas::getConnector('contacts')->execute()->json();
+Afas::getConnector('contacts')
+    ->execute()
+    ->json();
 ```
 Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
 
@@ -152,8 +168,16 @@ $connection = Afas::connection('differentConnectionName');
 /*
 * Use different getConnectors to retrieve data on the same connection
 */
-$contacts = $connection->getConnector('contacts')->take(1)->execute()->json();
-$articles = $connection->getConnector('articles')->take(1)->skip(1)->execute()->json();
+$contacts = $connection->getConnector('contacts')
+                       ->take(1)
+                       ->execute()
+                       ->json();
+                       
+$articles = $connection->getConnector('articles')
+                        ->take(1)
+                        ->skip(1)
+                        ->execute()
+                        ->json();
 ```
 
 ## Credits
