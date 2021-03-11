@@ -2,6 +2,8 @@
 
 namespace WeSimplyCode\LaravelAfasRestConnector;
 
+use Illuminate\Http\Client\Response;
+
 class AfasConnector
 {
     /**
@@ -31,10 +33,10 @@ class AfasConnector
     }
 
     /**
-     * @return mixed
+     * @return Response
      * @throws \Exception
      */
-    public function execute()
+    public function execute(): Response
     {
         $client = new AfasClient($this->connection, $this);
 

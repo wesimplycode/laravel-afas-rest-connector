@@ -2,6 +2,7 @@
 
 namespace WeSimplyCode\LaravelAfasRestConnector;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class AfasClient
@@ -26,10 +27,10 @@ class AfasClient
     /**
      * @param string $method
      * @param array $data
-     * @return mixed
+     * @return Response
      * @throws \Exception
      */
-    public function makeRequest(string $method, array $data = [])
+    public function makeRequest(string $method, array $data = []): Response
     {
         if (!$this->connection->getToken())
         {
