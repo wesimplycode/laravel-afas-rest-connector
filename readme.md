@@ -94,10 +94,10 @@ All AFAS Profit filters for the ```where()``` filter are available. The filters 
 Afas::getConnector('contacts')->where('type', '=', 'Person');
 
 // You can chain as much where filters as needed
-// Get only the contacts from the Netherlands & Belgium
+// Get only the contacts from the Netherlands who are organizations
 Afas::getConnector('contacts')
     ->where('country', '=', 'Netherlands')
-    ->where('country', '=', 'Belgium');
+    ->where('type', '=', 'Organization');
 ```
 
 ###### orWhere
