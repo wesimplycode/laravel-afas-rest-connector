@@ -87,6 +87,7 @@ Afas::getConnector('contacts')->sortOnField('Name', true);
 ###### Where
 If you want to get specific results from the getConnector you can use the ```where()``` filter. It is recommended to always use the ```where()```
 filter with the getConnector as it enhances the performance and only gives you the results you need.
+
 All AFAS Profit filters for the ```where()``` filter are available. The filters are listed in the config file. You can use them in their symbol form, or their text form.
 ```php
 // The where() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
@@ -109,12 +110,11 @@ Afas::getConnector('contacts')
     ->where('type', '=', 'Person')
     ->orWhere('type', '=', 'Organization');
 
-// You can chain as much where filters as needed
 // Get only the contacts from the Netherlands or Germany who are organizations
 Afas::getConnector('contacts')
+    ->where('type', '=', 'Organization')
     ->where('country', '=', 'Netherlands')
-    ->orWhere('country', '=', 'Germany')
-    ->where('type', '=', 'Organization');
+    ->orWhere('country', '=', 'Germany');
 ```
 
 #### Execute
