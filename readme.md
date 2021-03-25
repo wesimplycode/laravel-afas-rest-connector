@@ -16,7 +16,6 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
             * [orWhere](#orwhere)
       * [Execute](#execute)
       * [Generating URL](#generating-url)
-      * [Multiple connectors](#multiple-connectors-on-the-same-connection)
    * [Credits](#credits)
    * [License](#license)
 <!--te-->
@@ -170,30 +169,6 @@ Afas::getConnector('contacts')
     ->json();
 ```
 Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
-
-#### Multiple connectors on the same connection
-When you want to retrieve data from multiple connectors on the same connection you can retrieve an instance of a connection and make calls with different connectors on the same connection.
-```php
-// Retrieve an instance of the default connection
-$connection = Afas::connection();
-
-// Retrieve an instance of a different connection
-$connection = Afas::connection('differentConnectionName');
-
-/*
-* Use different getConnectors to retrieve data on the same connection
-*/
-$contacts = $connection->getConnector('contacts')
-                       ->take(1)
-                       ->execute()
-                       ->json();
-                       
-$articles = $connection->getConnector('articles')
-                        ->take(1)
-                        ->skip(1)
-                        ->execute()
-                        ->json();
-```
 
 ## Credits
 Sunil Kisoensingh
