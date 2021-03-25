@@ -7,18 +7,6 @@ use WeSimplyCode\LaravelAfasRestConnector\Interfaces\AfasConnectorInterface;
 class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
 {
     /**
-     * The amount of results that should be in the response
-     * @var int
-     */
-    protected $take;
-
-    /**
-     * The amount of results that should be skipped in the response
-     * @var int
-     */
-    protected $skip;
-
-    /**
      * The where filter for the query
      * @var array|null
      */
@@ -29,6 +17,18 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      * @var array|null
      */
     protected $orWhere = null;
+
+    /**
+     * The amount of results that should be skipped in the response
+     * @var int
+     */
+    protected $skip;
+
+    /**
+     * The amount of results that should be in the response
+     * @var int
+     */
+    protected $take;
 
     /**
      * @var array
@@ -203,7 +203,6 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
                         $i = 1;
                         break;
                     case 'where':
-                    case 'orWhere':
                         $array = $this->mergeWhereFilters();
                         $url .= $i > 0 ? '&'.$array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'] : $array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'];
                         $i = 1;
