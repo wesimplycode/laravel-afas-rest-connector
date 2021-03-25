@@ -13,6 +13,7 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
             * [Skip](#skip)
             * [SortOnField](#sortonfield)
             * [Where](#where)
+            * [orWhere](#orwhere)
       * [Execute](#execute)
       * [Generating URL](#generating-url)
       * [Multiple connectors](#multiple-connectors-on-the-same-connection)
@@ -101,7 +102,21 @@ Afas::getConnector('contacts')
 ```
 
 ###### orWhere
-Will be added soon!
+You can use the ```orWhere()``` filter to search a field for more than one value.
+```php
+// The orWhere() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
+// Get the contacts of type Person or Organization
+Afas::getConnector('contacts')
+    ->where('type', '=', 'Person')
+    ->orWhere('type', '=', 'Organization');
+
+// You can chain as much where filters as needed
+// Get only the contacts from the Netherlands or Germany who are organizations
+Afas::getConnector('contacts')
+    ->where('country', '=', 'Netherlands')
+    ->orWhere('country', '=', 'Germany')
+    ->where('type', '=', 'Organization');
+```
 
 #### Execute
 The ```execute()``` method is used when you have configured the connector accordingly to make the call to the AFAS profitServices.
