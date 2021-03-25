@@ -25,6 +25,12 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
     protected $where = null;
 
     /**
+     * The orWhere filter for the query
+     * @var array|null
+     */
+    protected $orWhere = null;
+
+    /**
      * @var array
      */
     protected $orderByFieldIds = array();
@@ -88,7 +94,6 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      */
     public function where(string $filterFieldId, string $operatorType, string $filterValue): AfasGetConnector
     {
-        // ToDo: consider making a where function for each filter -> ex: whereIs, whereIsNot (__call())
         if (!$operatorId = $this->getWhereOperatorId($operatorType))
         {
             throw new \Exception("No operatorId found for $operatorType.");
@@ -97,6 +102,26 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
         $filterFieldId == '' ?: $this->where['filterfieldids'][] = $filterFieldId;
         $filterValue == '' ?: $this->where['filtervalues'][] = $filterValue;
         $operatorId == '' ?: $this->where['operatortypes'][] = $operatorId;
+
+        return $this;
+    }
+
+    /**
+     * @param string $filterFieldId
+     * @param string $operatorType
+     * @param string $filterValue
+     * @return AfasGetConnector
+     */
+    public function orWhere(string $filterFieldId, string $operatorType, string $filterValue): AfasGetConnector
+    {
+        if (!$operatorId = $this->getWhereOperatorId($operatorType))
+        {
+            throw new \Exception("No operatorId found for $operatorType.");
+        }
+
+        $filterFieldId == '' ?: $this->orWhere['filterfieldids'][] = $filterFieldId;
+        $filterValue == '' ?: $this->orWhere['filtervalues'][] = $filterValue;
+        $operatorId == '' ?: $this->orWhere['operatortypes'][] = $operatorId;
 
         return $this;
     }
@@ -144,7 +169,6 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      */
     protected function addFiltersToUrl($url): string
     {
-        // ToDo: clean up this code by separating each filter to their own functions
         $filters = $this->getFilters();
         $filters = $this->removeEmptyFilters($filters);
 
@@ -163,53 +187,98 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
                         $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
                         $i = 1;
                         break;
-
                     case 'orderByFieldIds':
-                        $url .= $i > 0 ? '&'.$filter.'=' : $filter.'=';
+                        $url = $this->addOrderByFieldIdsFilterToUrl($url, $i);
                         $i = 1;
-
-                        $amountFields = count($value);
-                        $y = 1;
-
-                        foreach ($value as $field)
-                        {
-                            if (count($value) > 1 && $y < $amountFields)
-                            {
-                                $url .= $field.urlencode(',');
-                            } elseif ($y == $amountFields) {
-                                $url .= $field;
-                            }
-
-                            $y++;
-                        }
                         break;
-
-                    // ToDo: Added a way to add multiple where clauses but do clean up this code (find a better way that is also compatible with AND where)
                     case 'where':
-                        $filterFieldIds = 'filterfieldids=';
-                        $filterValues = 'filtervalues=';
-                        $operatorTypes = 'operatortypes=';
-
-                        for($y = 0; $y <= count($this->where['filterfieldids'])-1; $y++)
-                        {
-                            if ($y < count($this->where['filterfieldids'])-1)
-                            {
-                                $filterFieldIds .= $this->where['filterfieldids'][$y].urlencode(',');
-                                $filterValues .= $this->where['filtervalues'][$y].urlencode(',');
-                                $operatorTypes .= $this->where['operatortypes'][$y].urlencode(',');
-                            } elseif ($y == count($this->where['filterfieldids'])-1)
-                            {
-                                $filterFieldIds .= $this->where['filterfieldids'][$y];
-                                $filterValues .= $this->where['filtervalues'][$y];
-                                $operatorTypes .= $this->where['operatortypes'][$y];
-                            }
-                        }
-
-                        $url .= $i > 0 ? '&'.$filterFieldIds. '&' .$filterValues. '&' .$operatorTypes : $filterFieldIds. '&' .$filterValues. '&' .$operatorTypes;
-                        $i = 1;
-                        break;
+                    case 'orWhere':
+                        $array = $this->mergeWhereFilters();
+                        $url .= $i > 0 ? '&'.$array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'] : $array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'];
                 }
             }
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function mergeWhereFilters(): array
+    {
+        $array = [
+            'filterFieldIds' => 'filterfieldids=',
+            'filterValues' => 'filtervalues=',
+            'operatorTypes' => 'operatortypes='
+        ];
+
+        if ($this->where && $this->orWhere)
+        {
+            $array = $this->attachWhereFilters($array, $this->where, ',');
+            $array['filterFieldIds'] .= urlencode(';');
+            $array['filterFieldIds'] .= urlencode(';');
+            $array['filterValues'] .= urlencode(';');
+            $array['operatorTypes'] .= urlencode(';');
+            $array = $this->attachWhereFilters($array, $this->orWhere, ';');
+        } elseif ($this->where)
+        {
+            $array = $this->attachWhereFilters($array, $this->where, ',');
+        } elseif ($this->orWhere)
+        {
+            $array = $this->attachWhereFilters($array, $this->orWhere, ';');
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param array $array
+     * @param array $filter
+     * @param string $punctuationMark
+     * @return array
+     */
+    protected function attachWhereFilters(array $array, array $filter, string $punctuationMark): array
+    {
+        for ($i = 0; $i <= count($filter['filterfieldids'])-1; $i++)
+        {
+            if ($i < count($filter['filterfieldids'])-1)
+            {
+                $array['filterFieldIds'] .= $filter['filterfieldids'][$i].urlencode($punctuationMark);
+                $array['filterValues'] .= $filter['filtervalues'][$i].urlencode($punctuationMark);
+                $array['operatorTypes'] .= $filter['operatortypes'][$i].urlencode($punctuationMark);
+            } else {
+                $array['filterFieldIds'] .= $filter['filterfieldids'][$i];
+                $array['filterValues'] .= $filter['filtervalues'][$i];
+                $array['operatorTypes'] .= $filter['operatortypes'][$i];
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param string $url
+     * @param int $position
+     * @return string
+     */
+    protected function addOrderByFieldIdsFilterToUrl(string $url, int $position): string
+    {
+        $url .= $position > 0 ? '&orderbyfieldids=' : 'orderbyfieldids=';
+
+        $amountFields = count($this->orderByFieldIds);
+        $i = 1;
+
+        foreach ($this->orderByFieldIds as $field)
+        {
+            if ($amountFields > 1 && $i < $amountFields)
+            {
+                $url .= $field.urlencode(',');
+            } else {
+                $url .= $field;
+            }
+
+            $i++;
         }
 
         return $url;
