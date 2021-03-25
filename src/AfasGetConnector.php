@@ -94,14 +94,7 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      */
     public function where(string $filterFieldId, string $operatorType, string $filterValue): AfasGetConnector
     {
-        if (!$operatorId = $this->getWhereOperatorId($operatorType))
-        {
-            throw new \Exception("No operatorId found for $operatorType.");
-        }
-
-        $filterFieldId == '' ?: $this->where['filterfieldids'][] = $filterFieldId;
-        $filterValue == '' ?: $this->where['filtervalues'][] = $filterValue;
-        $operatorId == '' ?: $this->where['operatortypes'][] = $operatorId;
+        $this->where = $this->appendWhereFilters($this->where, $filterFieldId, $operatorType, $filterValue);
 
         return $this;
     }
@@ -111,19 +104,37 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      * @param string $operatorType
      * @param string $filterValue
      * @return AfasGetConnector
+     * @throws \Exception
      */
     public function orWhere(string $filterFieldId, string $operatorType, string $filterValue): AfasGetConnector
     {
+        $this->orWhere = $this->appendWhereFilters($this->orWhere, $filterFieldId, $operatorType, $filterValue);
+
+        return $this;
+    }
+
+    /**
+     * @param array $filter
+     * @param string $filterFieldId
+     * @param string $operatorType
+     * @param string $filterValue
+     * @return array
+     * @throws \Exception
+     */
+    protected function appendWhereFilters(?array $filter, string $filterFieldId, string $operatorType, string $filterValue): array
+    {
+        $array = $filter;
+
         if (!$operatorId = $this->getWhereOperatorId($operatorType))
         {
             throw new \Exception("No operatorId found for $operatorType.");
         }
 
-        $filterFieldId == '' ?: $this->orWhere['filterfieldids'][] = $filterFieldId;
-        $filterValue == '' ?: $this->orWhere['filtervalues'][] = $filterValue;
-        $operatorId == '' ?: $this->orWhere['operatortypes'][] = $operatorId;
+        $filterFieldId == '' ?: $array['filterfieldids'][] = $filterFieldId;
+        $filterValue == '' ?: $array['filtervalues'][] = $filterValue;
+        $operatorId == '' ?: $array['operatortypes'][] = $operatorId;
 
-        return $this;
+        return $array;
     }
 
     /**
@@ -195,6 +206,8 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
                     case 'orWhere':
                         $array = $this->mergeWhereFilters();
                         $url .= $i > 0 ? '&'.$array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'] : $array['filterFieldIds'].'&'.$array['filterValues'].'&'.$array['operatorTypes'];
+                        $i = 1;
+                        break;
                 }
             }
         }
@@ -216,7 +229,6 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
         if ($this->where && $this->orWhere)
         {
             $array = $this->attachWhereFilters($array, $this->where, ',');
-            $array['filterFieldIds'] .= urlencode(';');
             $array['filterFieldIds'] .= urlencode(';');
             $array['filterValues'] .= urlencode(';');
             $array['operatorTypes'] .= urlencode(';');
