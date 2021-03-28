@@ -59,6 +59,15 @@ Afas::getConnector('contacts', 'differentConnectionName');
 #### Filters
 You can apply filters on getConnectors to retrieve more specific data.
 There is no specific order to apply filters. You can chain as many filters as you want except for the ```take()``` and ```skip()``` filter. Those can only be used once per request.
+By default, this package will use the simple filter to retrieve results. You can enable the jsonFilter when your queries get a bit more advanced.
+The official documentation about filters: https://help.afas.nl/help/EN/SE/App_Cnr_Rest_GET.htm#o85263
+```php
+// This will give you a getConnector instance with the simple filter enabled
+Afas::getConnector('contacts');
+
+// This will give you a getConnector instance with the json filter enabled
+Afas::getConnector('contacts', true);
+```
 
 ###### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
@@ -109,7 +118,7 @@ Afas::getConnector('contacts')
 ```
 
 ###### orWhere
-You can use the ```orWhere()``` filter to add another where clause to the filter (records must match at least one criterion). Please check out the official docs how this works
+You can use the ```orWhere()``` filter to add another where clause to the filter (records must match at least one criterion). Please check out the official docs how this works.
 ```php
 // The orWhere() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
 // Get the contacts of type Person or Organization
