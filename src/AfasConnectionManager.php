@@ -32,12 +32,13 @@ class AfasConnectionManager
 
     /**
      * @param string $name
+     * @param bool $jsonFilter
      * @param string $connection
      * @return AfasGetConnector
      */
-    public function getConnector(string $name, string $connection = 'default'): AfasGetConnector
+    public function getConnector(string $name, bool $jsonFilter = false , string $connection = 'default'): AfasGetConnector
     {
-        return $this->connection($connection)->getConnector($name);
+        return $this->connection($connection)->getConnector($name, $jsonFilter);
     }
 
     /**

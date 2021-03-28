@@ -16,6 +16,7 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
             * [orWhere](#orwhere)
       * [Execute](#execute)
       * [Generating URL](#generating-url)
+      * [Inspecting the where filter](#inspecting-the-where-filter)
    * [Credits](#credits)
    * [License](#license)
 <!--te-->
@@ -44,6 +45,7 @@ After retrieving your connector you can apply filters to it or add data to it an
 
 #### GetConnector
 With the GetConnector you can retrieve data from AFAS profitService.
+The getConnector supports the simple filter, or the json filter.
 After configuring your getConnectors for your connection you can use the like this:
 
 ```php
@@ -85,14 +87,19 @@ Afas::getConnector('contacts')->sortOnField('Name', true);
 ```
 
 ###### Where
-If you want to get specific results from the getConnector you can use the ```where()``` filter. It is recommended to always use the ```where()```
+If you want to get specific results from the getConnector you can use the ```where()``` filter (records must match all criterion). It is recommended to always use the ```where()```
 filter with the getConnector as it enhances the performance and only gives you the results you need.
 
 All AFAS Profit filters for the ```where()``` filter are available. The filters are listed in the config file. You can use them in their symbol form, or their text form.
+
+**By default, the getConnector uses the simple filter. To enable the jsonFilter you can pass ```true``` as second parameter to the getConnector.**
 ```php
 // The where() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
-// Get only the contacts of type Person
+// Get only the contacts of type Person (simple filter)
 Afas::getConnector('contacts')->where('type', '=', 'Person');
+
+// Get only the contacts of type Person (json filter)
+Afas::getConnector('contacts', true)->where('type', '=', 'Person');
 
 // You can chain as much where filters as needed
 // Get only the contacts from the Netherlands who are organizations
@@ -102,7 +109,7 @@ Afas::getConnector('contacts')
 ```
 
 ###### orWhere
-You can use the ```orWhere()``` filter to search a field for more than one value.
+You can use the ```orWhere()``` filter to add another where clause to the filter (records must match at least one criterion). Please check out the official docs how this works
 ```php
 // The orWhere() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
 // Get the contacts of type Person or Organization
@@ -110,12 +117,15 @@ Afas::getConnector('contacts')
     ->where('type', '=', 'Person')
     ->orWhere('type', '=', 'Organization');
 
-// Get only the contacts from the Netherlands or Germany who are organizations
-Afas::getConnector('contacts')
+// Get only the contacts from the Netherlands or Germany who are organizations (json filter)
+Afas::getConnector('contacts', true)
     ->where('type', '=', 'Organization')
     ->where('country', '=', 'Netherlands')
-    ->orWhere('country', '=', 'Germany');
+    ->orWhere('type', '=', 'organization')
+    ->where('country', '=', 'Germany');
 ```
+
+**Sometimes the simple filter isn't enough to query specific results. Enable the jsonFilter when doing advanced queries. The jsonFilter and the simple filter don't always return the same results!**
 
 #### Execute
 The ```execute()``` method is used when you have configured the connector accordingly to make the call to the AFAS profitServices.
@@ -169,6 +179,16 @@ Afas::getConnector('contacts')
     ->where('Type', '=', 'Person')
     ->getUrl();
 ```
+
+#### Inspecting the where filter
+If you want to inspect the json from the where filter you can call the ```getJsonFilter()``` method instead of the ```execute()``` method after configuring the getConnector.
+```php
+Afas::getConnector('contacts')
+    ->take(10)
+    ->where('Type', '=', 'Person')
+    ->getJsonFilter();
+```
+This method won't return the take, skip and sortOnField filter.
 
 ## Credits
 Sunil Kisoensingh

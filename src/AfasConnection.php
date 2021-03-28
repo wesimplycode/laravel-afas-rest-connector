@@ -18,9 +18,10 @@ class AfasConnection
     /**
      * Get a getConnector for the selected connection
      * @param string $name
+     * @param bool $jsonFilter
      * @return AfasGetConnector
      */
-    public function getConnector(string $name): AfasGetConnector
+    public function getConnector(string $name, bool $jsonFilter = false): AfasGetConnector
     {
         if (!array_key_exists($name, $this->config['getConnectors'])) {
             throw new \InvalidArgumentException("GetConnector $name is not configured for this connection.");
@@ -28,7 +29,7 @@ class AfasConnection
 
         $config = $this->config['getConnectors'][$name];
 
-        return new AfasGetConnector($this, $config);
+        return new AfasGetConnector($this, $config, $jsonFilter);
     }
 
     /**
