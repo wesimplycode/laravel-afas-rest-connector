@@ -192,6 +192,7 @@ Afas::getConnector('contacts')
 #### Inspecting the where filter
 If you want to inspect the json from the where filter you can call the ```getJsonFilter()``` method instead of the ```execute()``` method after configuring the getConnector.
 ```php
+// This will return the where filter in a json string
 Afas::getConnector('contacts')
     ->take(10)
     ->where('Type', '=', 'Person')
