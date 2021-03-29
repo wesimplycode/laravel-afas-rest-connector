@@ -59,8 +59,8 @@ Afas::getConnector('contacts', 'differentConnectionName');
 #### Filters
 You can apply filters on getConnectors to retrieve more specific data.
 There is no specific order to apply filters. You can chain as many filters as you want except for the ```take()``` and ```skip()``` filter. Those can only be used once per request.
-By default, this package will use the simple filter to retrieve results. You can enable the jsonFilter when your queries get a bit more advanced.
-The official documentation about filters: https://help.afas.nl/help/EN/SE/App_Cnr_Rest_GET.htm#o85263
+**By default, this package will use the simple filter to retrieve results. You can enable the jsonFilter when your queries get a bit more advanced.**
+Check out the official documentation about the differences between the simple filter and the jsonFilter: https://help.afas.nl/help/EN/SE/App_Cnr_Rest_GET.htm#o85263
 ```php
 // This will give you a getConnector instance with the simple filter enabled
 Afas::getConnector('contacts');
