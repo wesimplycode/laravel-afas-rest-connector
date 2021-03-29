@@ -34,7 +34,11 @@ In the config file you can add different connections to the AFAS profitServices.
 One connection is added by default. If you will be using only one connection use the default connection.
 If you will be using multiple connections use the default connection for the connection you will be using the most to make things easier.
 
-Don't forget to add the config variables to you .env file.
+Add the following variables to your .env file
+```dotenv
+AFAS_ENVIRONMENT="Your AFAS environment # here" //example: T11111AA
+AFAS_TOKEN="Your AFAS token here" // example: <token><version>1</version><data>tokendata</data></token>
+```
 
 ## Usage
 I assume you know how the AFAS profitServices work and what the different connectors do.
