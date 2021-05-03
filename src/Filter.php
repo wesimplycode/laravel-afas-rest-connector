@@ -60,7 +60,7 @@ class Filter
                 {
                     case 'skip':
                     case 'take':
-                        $url .= $i > 0 ? '&'.$filter.'='.$value : $filter.'='.$value;
+                        $url .= $i > 0 ? '&'.$filter.'='.$value : '?'.$filter.'='.$value;
                         $i = 1;
                         break;
                     case 'orderByFieldIds':
