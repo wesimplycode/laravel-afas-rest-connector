@@ -14,14 +14,17 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
             * [SortOnField](#sortonfield)
             * [Where](#where)
             * [orWhere](#orwhere)
-      * [Execute](#execute)
+            * [Execute](#execute)
+            * [Inspecting the where filter](#inspecting-the-where-filter)
+      * [UpdateConnector](#updateconnector)
+            * [Insert & Update records](#insert--update-records)
       * [Generating URL](#generating-url)
-      * [Inspecting the where filter](#inspecting-the-where-filter)
+      * [Meta info](#metainfo)
    * [Credits](#credits)
    * [License](#license)
 <!--te-->
 
-## Installation
+## <ins>Installation</ins>
 ```
 composer require we-simply-code/laravel-afas-rest-connector
 ```
@@ -40,19 +43,21 @@ AFAS_ENVIRONMENT="Your AFAS environment # here" //example: T11111AA
 AFAS_TOKEN="Your AFAS token here" // example: <token><version>1</version><data>tokendata</data></token>
 ```
 
-## Usage
+## <ins>Usage</ins>
 I assume you know how the AFAS profitServices work and what the different connectors do.
-If not please take a look at the documentation for the AFAS REST API: https://help.afas.nl/help/NL/SE/App_Cnr_Rest_Api.htm?query=rest
+If not please take a look at the documentation for the AFAS REST API: https://help.afas.nl/help/EN/SE/App_Cnr_Rest_Api.htm?query=rest
 
 This package ships with a facade to access the different connectors easily.
 After retrieving your connector you can apply filters to it or add data to it and then call the ```execute()``` method to make the call to AFAS profitServices.
 
-#### GetConnector
+#### <ins>GetConnector</ins>
 With the GetConnector you can retrieve data from AFAS profitService.
 The getConnector supports the simple filter, or the json filter.
 After configuring your getConnectors for your connection you can use the like this:
 
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will give you the "contacts" getConnector for the default connection
 Afas::getConnector('contacts');
 
@@ -66,6 +71,8 @@ There is no specific order to apply filters. You can chain as many filters as yo
 **By default, this package will use the simple filter to retrieve results. You can enable the jsonFilter when your queries get a bit more advanced.**
 Check out the official documentation about the differences between the simple filter and the jsonFilter: https://help.afas.nl/help/EN/SE/App_Cnr_Rest_GET.htm#o85263
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will give you a getConnector instance with the simple filter enabled
 Afas::getConnector('contacts');
 
@@ -76,6 +83,8 @@ Afas::getConnector('contacts', true);
 ###### Take
 By default, the profitServices return 100 results. You can adjust the amount of results by adding the ```take()``` filter.
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will add the take filter to the connector with an amount of 10
 Afas::getConnector('contacts')->take(10);
 ```
@@ -83,6 +92,8 @@ Afas::getConnector('contacts')->take(10);
 ###### Skip
 You can skip results by adding the ```skip()``` filter.
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will add the skip filter to the connector with an amount of 10
 Afas::getConnector('contacts')->skip(10);
 ```
@@ -91,6 +102,8 @@ Afas::getConnector('contacts')->skip(10);
 Sort the results on any field. By default, the results will be ascending but with and extra parameter you can change that.
 Field names must be exact the same as they are in AFAS profitServices.
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will sort the results ascending by the field 'Name'
 Afas::getConnector('contacts')->sortOnField('Name');
 
@@ -107,6 +120,8 @@ All AFAS Profit filters for the ```where()``` filter are available. The filters 
 
 **By default, the getConnector uses the simple filter. To enable the jsonFilter you can pass ```true``` as second parameter to the getConnector.**
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // The where() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
 // Get only the contacts of type Person (simple filter)
 Afas::getConnector('contacts')->where('type', '=', 'Person');
@@ -124,6 +139,8 @@ Afas::getConnector('contacts')
 ###### orWhere
 You can use the ```orWhere()``` filter to add another where clause to the filter (records must match at least one criterion). Please check out the official docs how this works.
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // The orWhere() filter accepts the field type as first parameter, filter type as second and what the results should be filtered on as third
 // Get the contacts of type Person or Organization
 Afas::getConnector('contacts')
@@ -143,6 +160,8 @@ Afas::getConnector('contacts', true)
 #### Execute
 The ```execute()``` method is used when you have configured the connector accordingly to make the call to the AFAS profitServices.
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // Execute the call. This will retrieve 100 contacts from the AFAS profitServices
 Afas::getConnector('contacts')->execute();
 
@@ -167,6 +186,8 @@ This package uses Laravel's wrapper around Guzzle to make http calls.
 That means that after we call the ```execute()``` method, we can use the methods Laravel provides to inspect the response.
 Example:
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // This will return the request status
 Afas::getConnector('contacts')
     ->execute()
@@ -179,11 +200,49 @@ Afas::getConnector('contacts')
 ```
 Check out the documentation for the Laravel http client: https://laravel.com/docs/8.x/http-client#introduction
 
-#### Generating URL
+#### Inspecting the where filter
+If you want to inspect the json from the where filter you can call the ```getJsonFilter()``` method instead of the ```execute()``` method after configuring the getConnector.
+```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
+// This will return the where filter in a json string
+Afas::getConnector('contacts')
+    ->take(10)
+    ->where('Type', '=', 'Person')
+    ->getJsonFilter();
+```
+This method won't return the take, skip and sortOnField filter.
+
+
+#### <ins>UpdateConnector</ins>
+With the UpdateConnector you can insert, update or delete records from AFAS profitService.
+You can use a tool like https://connect.afas.nl to inspect the json object required to manipulate data in AFAS profitService, or you can call the ```metaInfo()``` method on the connector to inspect the fields.
+
+#### Insert & Update records
+```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
+$data = [
+            "KnPerson" => [
+                "Element" => [
+                    "Fields" => [],
+                ],
+            ],
+        ];
+// Create a new record in AFAS profitService
+Afas::updateConnector('person')->insert($data);
+
+// Update an existing record in AFAS profitService
+Afas::updateConnector('person')->update($data);
+```
+
+#### <ins>Generating URL</ins>
 If you want to inspect the URL that is being generated by the connector you can call the ```getUrl()```
 method instead of the ```execute()``` method after configuring the connector.
 
 ```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
 // Both of these will return the generated URL by the connector (you can use this directly to make a call in something like Postman)
 Afas::getConnector('contacts')->getUrl();
 
@@ -193,16 +252,20 @@ Afas::getConnector('contacts')
     ->getUrl();
 ```
 
-#### Inspecting the where filter
-If you want to inspect the json from the where filter you can call the ```getJsonFilter()``` method instead of the ```execute()``` method after configuring the getConnector.
+#### <ins>MetaInfo</ins>
+To inspect the meta info about a connector we can simply call the ```metaInfo()``` method.
+
 ```php
-// This will return the where filter in a json string
-Afas::getConnector('contacts')
-    ->take(10)
-    ->where('Type', '=', 'Person')
-    ->getJsonFilter();
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
+// Get the meta info from the connector
+Afas::getConnector('contacts')->metaInfo();
+Afas::updateConnector('person')->metaInfo();
+
+// Get the json representation of the meta info from the connector
+Afas::getConnector('contacts')->metaInfo()->json();
+Afas::updateConnector('person')->metaInfo()->json();
 ```
-This method won't return the take, skip and sortOnField filter.
 
 ## Credits
 Sunil Kisoensingh
