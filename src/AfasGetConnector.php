@@ -2,6 +2,7 @@
 
 namespace WeSimplyCode\LaravelAfasRestConnector;
 
+use Illuminate\Http\Client\Response;
 use WeSimplyCode\LaravelAfasRestConnector\Interfaces\AfasConnectorInterface;
 
 class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
@@ -10,6 +11,11 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
      * @var Filter
      */
     protected $filter;
+
+    /**
+     * @var string
+     */
+    private $meta;
 
     public function __construct(AfasConnection $connection, string $name, bool $jsonFilter = false)
     {
@@ -30,7 +36,9 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
 
         $url .= $this->filter->url();
 
-        return $url;
+        $metaUrl = $this->buildUrl().$this->meta.'/'.$this->name;
+
+        return $this->meta ? $metaUrl : $url;
     }
 
     /**
@@ -47,6 +55,17 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
     public function getMethod(): string
     {
         return 'GET';
+    }
+
+    /**
+     * @return Response
+     * @throws \Exception
+     */
+    public function metaInfo(): Response
+    {
+        $this->meta = 'metainfo/get';
+
+        return $this->execute();
     }
 
     /**

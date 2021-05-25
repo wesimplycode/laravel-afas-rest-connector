@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static \WeSimplyCode\LaravelAfasRestConnector\AfasConnection connection(string $name = 'default')
  * @method static \WeSimplyCode\LaravelAfasRestConnector\AfasGetConnector getConnector(string $name, bool $jsonFilter = false , string $connection = 'default')
+ * @method static \WeSimplyCode\LaravelAfasRestConnector\AfasUpdateConnector updateConnector(string $name, string $connection = 'default')
  *
  * @see \WeSimplyCode\LaravelAfasRestConnector\AfasConnectionManager
  */

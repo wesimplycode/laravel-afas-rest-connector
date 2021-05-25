@@ -40,7 +40,9 @@ class AfasConnector
     {
         $client = new AfasClient($this->connection, $this);
 
-        return $client->makeRequest(strtolower($this->getMethod()));
+        $method = strtolower($this->getMethod());
+
+        return $method != 'get' ? $client->makeRequest($method, $this->data):$client->makeRequest($method);
     }
 
     /**
