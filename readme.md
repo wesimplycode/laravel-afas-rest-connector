@@ -17,7 +17,7 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
             * [Execute](#execute)
             * [Inspecting the where filter](#inspecting-the-where-filter)
       * [UpdateConnector](#updateconnector)
-            * [Insert & Update records](#insert--update-records)
+        * [Insert & Update records](#insert--update-records)
       * [Generating URL](#generating-url)
       * [Meta info](#metainfo)
    * [Credits](#credits)
@@ -262,7 +262,7 @@ use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
 Afas::getConnector('contacts')->metaInfo();
 Afas::updateConnector('person')->metaInfo();
 
-// Get the json representation
+// Get the json representation of the meta info from the connector
 Afas::getConnector('contacts')->metaInfo()->json();
 Afas::updateConnector('person')->metaInfo()->json();
 ```
