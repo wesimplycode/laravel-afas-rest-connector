@@ -74,19 +74,33 @@ class AfasUpdateConnector extends AfasConnector implements AfasConnectorInterfac
         return $this->execute();
     }
 
-    public function update()
+    /**
+     * @param array $data
+     * @return Response
+     * @throws \Exception
+     */
+    public function update(array $data): Response
     {
         $this->method = 'PUT';
 
-        // todo: complete the update method
+        $this->data = $data;
+
+        return $this->execute();
     }
 
-    public function delete()
-    {
-        $this->method = 'DELETE';
-
-        // todo: complete the delete method
-    }
+//    /**
+//     * @param array $data
+//     * @return Response
+//     * @throws \Exception
+//     */
+//    public function delete(array $data): Response
+//    {
+//        $this->method = 'DELETE';
+//
+//        $this->data = $data;
+//
+//        return $this->execute();
+//    }
 
     // todo: find a way for insert sub record, update main record
 }
