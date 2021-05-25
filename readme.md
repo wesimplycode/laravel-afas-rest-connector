@@ -262,7 +262,7 @@ use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
 Afas::getConnector('contacts')->metaInfo();
 Afas::updateConnector('person')->metaInfo();
 
-// Get the json representation of the meta info from the connector
+// Get the json representation
 Afas::getConnector('contacts')->metaInfo()->json();
 Afas::updateConnector('person')->metaInfo()->json();
 ```
