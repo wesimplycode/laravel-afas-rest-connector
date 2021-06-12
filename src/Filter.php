@@ -15,6 +15,11 @@ class Filter
     ];
 
     /**
+     * @var int
+     */
+    protected $orWhere = 0;
+
+    /**
      * The amount of results that should be skipped in the response
      * @var string
      */
@@ -129,15 +134,13 @@ class Filter
             throw new \Exception("No operatorId found for $operatorType.");
         }
 
-        if ($currentFilterKey = $this->getCurrentWhereFilterKey())
+        $this->orWhere = 0;
+
+        if (array_key_exists(0, $this->where['Filters']['Filter']))
         {
-            array_push($this->where['Filters']['Filter'][$currentFilterKey]['Field'], [
-                "@FieldId" => "$filterFieldId",
-                "@OperatorType" => "$operatorId",
-                "#text" => "$filterValue",
-            ]);
+            $this->pushNewFieldToWhereFilter($filterFieldId, $operatorId, $filterValue, 0);
         } else {
-            $this->addToNewWhereClause($filterFieldId, $operatorType, $filterValue);
+            $this->pushNewWhereFilter($filterFieldId, $operatorId, $filterValue);
         }
     }
 
@@ -154,6 +157,23 @@ class Filter
             throw new \Exception("No operatorId found for $operatorType.");
         }
 
+        $this->orWhere += 1;
+
+        if (array_key_exists($this->orWhere, $this->where['Filters']['Filter']))
+        {
+            $this->pushNewFieldToWhereFilter($filterFieldId, $operatorId, $filterValue, $this->orWhere);
+        } else {
+            $this->pushNewWhereFilter($filterFieldId, $operatorId, $filterValue);
+        }
+    }
+
+    /**
+     * @param string $filterFieldId
+     * @param string $operatorId
+     * @param string $filterValue
+     */
+    private function pushNewWhereFilter(string $filterFieldId, string $operatorId, string $filterValue): void
+    {
         array_push($this->where['Filters']['Filter'], [
             "@FilterId" => "Filter " . (count($this->where['Filters']['Filter']) + 1),
             "Field" => [
@@ -167,11 +187,18 @@ class Filter
     }
 
     /**
-     * @return int|null
+     * @param string $filterFieldId
+     * @param string $operatorId
+     * @param string $filterValue
+     * @param int $whereFilterKey
      */
-    private function getCurrentWhereFilterKey(): ?int
+    private function pushNewFieldToWhereFilter(string $filterFieldId, string $operatorId, string $filterValue, int $whereFilterKey): void
     {
-        return count($this->where['Filters']['Filter']) == 0 ? null : count($this->where['Filters']['Filter'])-1;
+        array_push($this->where['Filters']['Filter'][$whereFilterKey]['Field'], [
+            "@FieldId" => "$filterFieldId",
+            "@OperatorType" => "$operatorId",
+            "#text" => "$filterValue",
+        ]);
     }
 
     /**

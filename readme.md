@@ -37,8 +37,8 @@ In the config file you can add different connections to the AFAS profitServices.
 One connection is added by default. If you will be using only one connection use the default connection.
 If you will be using multiple connections use the default connection for the connection you will be using the most to make things easier.
 
-For each connection in the config file you will have to add the connectors. Each connection contains the getConnectors & updateConnectors array.
-Add your connectors to these arrays. The key can be anything you want (you will use this as the name of the connector in your code), the value has to be the id of the connector in AFAS profitService.
+#### For each connection in the config file you will have to add the connectors. Each connection contains the getConnectors & updateConnectors array.
+#### Add your connectors to these arrays. The key can be anything you want (you will use this as the name of the connector in your code), the value has to be the id of the connector in AFAS profitService.
 
 Add the following variables to your .env file
 ```dotenv
