@@ -134,11 +134,9 @@ class Filter
             throw new \Exception("No operatorId found for $operatorType.");
         }
 
-        $this->orWhere = 0;
-
         if (array_key_exists(0, $this->where['Filters']['Filter']))
         {
-            $this->pushNewFieldToWhereFilter($filterFieldId, $operatorId, $filterValue, 0);
+            $this->pushNewFieldToWhereFilter($filterFieldId, $operatorId, $filterValue, $this->orWhere);
         } else {
             $this->pushNewWhereFilter($filterFieldId, $operatorId, $filterValue);
         }
