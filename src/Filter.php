@@ -8,7 +8,7 @@ class Filter
      * The where filter for the query
      * @var array
      */
-    protected $where = [
+    public $where = [
         "Filters" => [
             "Filter" => []
         ]
@@ -89,6 +89,11 @@ class Filter
     public function getWhere(): array
     {
         return $this->where;
+    }
+
+    public function setWhere(array $whereFilter)
+    {
+        $this->where = $whereFilter;
     }
 
     /**
@@ -203,7 +208,7 @@ class Filter
      * @param string $operator
      * @return string|null
      */
-    private function getWhereOperatorId(string $operator): ?string
+    public function getWhereOperatorId(string $operator): ?string
     {
         $afasFilters = config('afas')['filterOperators'];
 

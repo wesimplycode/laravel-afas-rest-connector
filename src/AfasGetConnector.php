@@ -42,6 +42,38 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
     }
 
     /**
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        return $this->filter->getWhere()['Filters']['Filter'];
+    }
+
+    public function addToFilter(string $filterName, string $filterFieldId, string $operatorType, string $filterValue)
+    {
+        $filterKey = null;
+
+        foreach ($this->getFilters() as $key => $filter)
+        {
+            if ($filter['@FilterId'] == $filterName)
+            {
+                $filterKey = $key;
+            }
+        }
+
+        if ($filterKey)
+        {
+            $operatorId = $this->filter->getWhereOperatorId($operatorType);
+
+            $this->filter->where['Filters']['Filter'][$filterKey]['Field'][] = [
+                "@FieldId" => "$filterFieldId",
+                "@OperatorType" => "$operatorId",
+                "#text" => "$filterValue",
+            ];
+        }
+    }
+
+    /**
      * @return string
      */
     public function getJsonFilter(): string
