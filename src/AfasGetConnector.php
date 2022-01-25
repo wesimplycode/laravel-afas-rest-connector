@@ -58,10 +58,11 @@ class AfasGetConnector extends AfasConnector implements AfasConnectorInterface
             if ($filter['@FilterId'] == $filterName)
             {
                 $filterKey = $key;
+                break;
             }
         }
 
-        if ($filterKey)
+        if ($filterKey !== null)
         {
             $operatorId = $this->filter->getWhereOperatorId($operatorType);
 
