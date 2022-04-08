@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "php": "^7.3|^8.0",
-        "illuminate/support": "^8"
+        "illuminate/support": "^8|^9"
     },
     "license": "MIT",
     "authors": [
