@@ -41,7 +41,7 @@ return [
         '2' => ['>=', 'isGreaterThanOrEqualTo'],
         '3' => ['<=', 'isSmallerThanOrEqualTo'],
         '4' => ['>', 'isGreaterThan'],
-        '5' => ['>', 'isSmallerThan'],
+        '5' => ['<', 'isSmallerThan'],
         '6' => ['*', 'contains'],
         '7' => ['!=', 'doesNotEqual'],
         '8' => ['[]', 'isEmpty'],
