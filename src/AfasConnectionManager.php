@@ -19,7 +19,7 @@ class AfasConnectionManager
      * @param string $name
      * @return AfasConnection
      */
-    public function connection(string $name = 'default'): AfasConnection
+    public function connection(string $name = 'default', string $token, string $environment): AfasConnection
     {
         if (!array_key_exists($name, $this->config['connections'])) {
             throw new \InvalidArgumentException("Connection $name is not configured.");
@@ -27,6 +27,11 @@ class AfasConnectionManager
 
         $config = $this->config['connections'][$name];
 
+        if($token && $environment) {
+            $config['token'] = $token;
+            $config['environment'] = $environment;
+        }
+        
         return new AfasConnection($config);
     }
 
@@ -36,9 +41,9 @@ class AfasConnectionManager
      * @param string $connection
      * @return AfasGetConnector
      */
-    public function getConnector(string $name, bool $jsonFilter = false , string $connection = 'default'): AfasGetConnector
+    public function getConnector(string $name, bool $jsonFilter = false , string $connection = 'default', string $token = null, string $environment = null): AfasGetConnector
     {
-        return $this->connection($connection)->getConnector($name, $jsonFilter);
+        return $this->connection($connection, $token, $environment)->getConnector($name, $jsonFilter);
     }
 
     /**

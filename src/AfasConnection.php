@@ -21,13 +21,18 @@ class AfasConnection
      * @param bool $jsonFilter
      * @return AfasGetConnector
      */
-    public function getConnector(string $name, bool $jsonFilter = false): AfasGetConnector
+    public function getConnector(string $name, bool $jsonFilter = false, string $token = null, string $environment = null): AfasGetConnector
     {
         if (!array_key_exists($name, $this->config['getConnectors'])) {
             throw new \InvalidArgumentException("GetConnector $name is not configured for this connection.");
         }
 
         $config = $this->config['getConnectors'][$name];
+
+        if($token && $environment) {
+            $config['token'] = $token;
+            $config['environment'] = $environment;
+        }
 
         return new AfasGetConnector($this, $config, $jsonFilter);
     }
@@ -37,7 +42,7 @@ class AfasConnection
      * @param string $name
      * @return AfasUpdateConnector
      */
-    public function updateConnector(string $name): AfasUpdateConnector
+    public function updateConnector(string $name, string $token = null, string $environment = null): AfasUpdateConnector
     {
         if (!array_key_exists($name, $this->config['updateConnectors'])) {
             throw new \InvalidArgumentException("UpdateConnector $name is not configured for this connection.");
@@ -45,6 +50,11 @@ class AfasConnection
 
         $config = $this->config['updateConnectors'][$name];
 
+        if($token && $environment) {
+            $config['token'] = $token;
+            $config['environment'] = $environment;
+        }
+        
         return new AfasUpdateConnector($this, $config);
     }
 
