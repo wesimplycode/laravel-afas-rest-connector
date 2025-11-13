@@ -230,7 +230,7 @@ class Filter
      */
     protected function addOrderByFieldIdsFilterToUrl(string $url, int $position): string
     {
-        $url .= $position > 0 ? '&orderbyfieldids=' : 'orderbyfieldids=';
+        $url .= $position > 0 ? '&orderbyfieldids=' : '?orderbyfieldids=';
 
         $amountFields = count($this->orderByFieldIds);
         $i = 1;
