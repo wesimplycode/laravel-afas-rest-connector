@@ -6,6 +6,10 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
 ## Table of Contents  
 <!--ts-->
    * [Installation](#installation)
+   * [Authentication](#authentication)
+      * [OAuth (client credentials)](#oauth-client-credentials)
+      * [Classic token](#classic-token)
+      * [Overriding credentials at runtime](#overriding-credentials-at-runtime)
    * [Usage](#usage)
       * [GetConnector](#getconnector)
          * [Filters](#filters)
@@ -20,6 +24,7 @@ This package integrates the AFAS REST API with Laravel with a minimal setup.
         * [Insert & Update records](#insert--update-records)
       * [Generating URL](#generating-url)
       * [Meta info](#metainfo)
+   * [Testing](#testing)
    * [Credits](#credits)
    * [License](#license)
 <!--te-->
@@ -42,8 +47,88 @@ If you will be using multiple connections use the default connection for the con
 
 Add the following variables to your .env file
 ```dotenv
-AFAS_ENVIRONMENT="Your AFAS environment # here" //example: T11111AA
-AFAS_TOKEN="Your AFAS token here" // example: <token><version>1</version><data>tokendata</data></token>
+AFAS_ENVIRONMENT="Your AFAS environment # here" # example: T11111AA
+
+# OAuth client credentials (recommended)
+AFAS_CLIENT_ID="Your OAuth client id"
+AFAS_CLIENT_SECRET="Your OAuth client secret"
+
+# Or the classic token (discontinued by AFAS on 31 August 2027)
+AFAS_TOKEN="Your AFAS token here" # example: <token><version>1</version><data>tokendata</data></token>
+```
+
+## <ins>Authentication</ins>
+AFAS supports two ways to authenticate against the Profit REST API. See the official documentation: https://docs.afas.help/profit/en/authentication
+
+Which method a connection uses is controlled by the `auth` key of the connection (`AFAS_AUTH` in your .env): `oauth` or `token`.
+When `auth` is empty the package picks OAuth as soon as a `client_id` is configured and otherwise falls back to the classic token.
+
+#### <ins>OAuth (client credentials)</ins>
+This is the server-to-server flow: the package exchanges the client id and client secret of your App Connector for an access token and sends it as `Authorization: Bearer <token>`.
+Create the client id and secret on the App Connector in AFAS Profit: https://help.afas.nl/help/NL/SE/120718.htm
+
+```dotenv
+AFAS_ENVIRONMENT=T11111AA
+AFAS_CLIENT_ID=your-client-id
+AFAS_CLIENT_SECRET=your-client-secret
+```
+
+Access tokens are valid for one hour. The package stores the access token in your Laravel cache and only requests a new one when it is about to expire,
+so you do not have to manage tokens yourself. When AFAS answers with a 401 the token is discarded and the request is retried once with a fresh token.
+When several processes need a new token at the same time an atomic cache lock makes sure only one of them calls the token endpoint (on cache stores that support locks).
+
+The cache behaviour can be tuned in the `oauth` section of `config/afas.php`:
+```php
+'oauth' => [
+    'cache_store' => env('AFAS_OAUTH_CACHE_STORE', null), // null = default cache store
+    'cache_prefix' => 'afas_oauth_access_token',
+    'expiry_margin' => 60,       // refresh this many seconds before the token expires
+    'lock_seconds' => 10,
+    'lock_wait_seconds' => 10,
+],
+```
+
+If you want to be notified of new tokens (for example to store them somewhere else) you can register a callback on the token provider of a connection:
+```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
+$connection = Afas::connection();
+
+$connection->getOAuthTokenProvider()->setTokenUpdateCallback(function (string $accessToken, int $expiresAt) {
+    // ...
+});
+
+$connection->getConnector('contacts')->execute();
+```
+
+A failed token request throws a `WeSimplyCode\LaravelAfasRestConnector\Exceptions\AfasAuthenticationException`.
+
+#### <ins>Classic token</ins>
+**AFAS discontinues this method on 31 August 2027.**
+The token you generate in AFAS Profit is sent base64 encoded as `Authorization: AfasToken <token>`.
+```dotenv
+AFAS_ENVIRONMENT=T11111AA
+AFAS_TOKEN="<token><version>1</version><data>tokendata</data></token>"
+```
+
+#### <ins>Overriding credentials at runtime</ins>
+When the credentials are not known at configuration time (for example a multi tenant application) you can override them per connection:
+```php
+use WeSimplyCode\LaravelAfasRestConnector\Facades\Afas;
+
+// OAuth client credentials for another environment, based on the connectors of the default connection
+Afas::oauthConnection('client-id', 'client-secret', 'O22222AA')->getConnector('contacts')->execute();
+
+// Classic token for another environment
+Afas::connection('default', '<token>...</token>', 'O22222AA')->getConnector('contacts')->execute();
+
+// Or override any configuration value of a connection
+Afas::connectionWith('default', [
+    'environment' => 'O22222AA',
+    'auth' => 'oauth',
+    'client_id' => 'client-id',
+    'client_secret' => 'client-secret',
+])->getConnector('contacts')->execute();
 ```
 
 ## <ins>Usage</ins>
@@ -268,6 +353,32 @@ Afas::updateConnector('person')->metaInfo();
 // Get the json representation of the meta info from the connector
 Afas::getConnector('contacts')->metaInfo()->json();
 Afas::updateConnector('person')->metaInfo()->json();
+```
+
+## <ins>Testing</ins>
+The package ships with a PHPUnit test suite (Orchestra Testbench) that fakes the AFAS endpoints, so no AFAS credentials are needed:
+```
+composer install
+composer test
+```
+
+Without a local PHP installation you can run the suite in Docker. The script resolves the dependencies for the requested PHP version(s) and runs PHPUnit in a matching `php:<version>-cli` container:
+```
+./docker-test.sh              # PHP 8.4
+./docker-test.sh 8.1 8.4      # run on several PHP versions
+./docker-test.sh 8.4 -- --filter OAuth
+```
+
+To verify your credentials against a real AFAS environment, request a token from Profit directly:
+```bash
+curl -X POST https://<environmentnumber>.resttest.afas.online/ProfitRestServices/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" -d "client_id=<CLIENT_ID>" -d "client_secret=<CLIENT_SECRET>"
+```
+Or from your Laravel application with `php artisan tinker`:
+```php
+Afas::connection()->getOAuthTokenProvider()->requestAccessToken(); // returns the access token
+Afas::getConnector('contacts')->take(1)->execute()->json();       // full round trip
 ```
 
 ## Credits
