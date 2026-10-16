@@ -50,23 +50,6 @@ class AfasConnector
      */
     protected function buildUrl(): ?string
     {
-        $default = ".afas.online/profitrestservices/";
-
-        $url = "https://".$this->connection->getEnvironmentNumbers().".rest";
-
-        if ($this->connection->getTypeOfEnvironment() == 'production')
-        {
-            $url .= $default;
-        } elseif ($this->connection->getTypeOfEnvironment() == 'test')
-        {
-            $url .= 'test'.$default;
-        } elseif ($this->connection->getTypeOfEnvironment() == 'accept')
-        {
-            $url .= 'accept'.$default;
-        } else {
-            return null;
-        }
-
-        return $url;
+        return $this->connection->getBaseUrl();
     }
 }
